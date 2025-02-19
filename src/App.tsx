@@ -1,20 +1,20 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   addEdge,
   useNodesState,
   useEdgesState,
   type OnConnect,
-} from '@xyflow/react';
+} from "@xyflow/react";
 
-import '@xyflow/react/dist/style.css';
+import "@xyflow/react/dist/style.css";
 
-import { initialNodes, nodeTypes } from './nodes';
-import { initialEdges, edgeTypes } from './edges';
-import { getVersionById, saveVersion } from './store/versionDb';
+import { initialNodes, nodeTypes } from "./nodes";
+import { initialEdges, edgeTypes } from "./edges";
+import { getVersionById, saveVersion } from "./store/versionDb";
+import { VersionList } from "./components/VersionList";
 
 export default function App() {
   const isLoaded = useRef<boolean>(false);
@@ -23,7 +23,7 @@ export default function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
-    [setEdges]
+    [setEdges],
   );
 
   async function initalCopy() {
@@ -31,8 +31,8 @@ export default function App() {
 
     const initialVersion = await getVersionById(1);
     if (!initialVersion) {
-      await saveVersion('initial', nodes, edges);
-    }  
+      await saveVersion("initial", nodes, edges);
+    }
   }
 
   useEffect(() => {
@@ -41,19 +41,23 @@ export default function App() {
   }, []);
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      nodeTypes={nodeTypes}
-      onNodesChange={onNodesChange}
-      edges={edges}
-      edgeTypes={edgeTypes}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      fitView
-    >
-      <Background />
-      <MiniMap />
-      <Controls />
-    </ReactFlow>
+    <div className="h-screen w-screen">
+      <VersionList />
+
+      <ReactFlow
+        nodes={nodes}
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        edges={edges}
+        edgeTypes={edgeTypes}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        fitView
+      >
+        <Background />
+
+        <Controls />
+      </ReactFlow>
+    </div>
   );
 }
