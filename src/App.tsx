@@ -1,45 +1,28 @@
-import { useCallback, useEffect, useRef } from "react";
-import {
-  ReactFlow,
-  Background,
-  Controls,
-  addEdge,
-  useEdgesState,
-  type OnConnect,
-} from "@xyflow/react";
-
+import { ReactFlow, Background, Controls } from "@xyflow/react";
+import { useShallow } from "zustand/react/shallow";
 import "@xyflow/react/dist/style.css";
 
-import { nodeTypes } from "./nodes";
-import { initialEdges, edgeTypes } from "./edges";
-import { getVersionById, saveVersion } from "./database/versionDb";
 import { VersionList } from "./components/VersionList";
-import { useSelectedVersion } from "./store/useSelectedVersion";
 import { ResetButton } from "./components/ResetButton";
+import { useSelectedVersionStore } from "./store/useSelectedVersionStore";
+import { useInitializeApp } from "./hooks/useInitializeApp";
+import { nodeTypes } from "./nodes";
+import { edgeTypes } from "./edges";
+import type { SelectedVersionStoreType } from "./types.ts";
+
+const selector = (state: SelectedVersionStoreType) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+});
 
 export default function App() {
-  const isLoaded = useRef<boolean>(false);
+  useInitializeApp();
 
-  const { nodes, onNodesChange } = useSelectedVersion();
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((edges) => addEdge(connection, edges)),
-    [setEdges],
-  );
-
-  async function initalCopy() {
-    if (isLoaded.current) return;
-
-    const initialVersion = await getVersionById(1);
-    if (!initialVersion) {
-      await saveVersion("initial", nodes, edges);
-    }
-  }
-
-  useEffect(() => {
-    initalCopy();
-    isLoaded.current = true;
-  }, []);
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } =
+    useSelectedVersionStore(useShallow(selector));
 
   return (
     <div className="h-screen w-screen">
@@ -51,9 +34,9 @@ export default function App() {
       <ReactFlow
         nodes={nodes}
         nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
         edges={edges}
         edgeTypes={edgeTypes}
+        onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView

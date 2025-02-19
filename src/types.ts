@@ -1,6 +1,27 @@
-import type { Edge } from "@xyflow/react";
+import type {
+  Edge,
+  OnNodesChange,
+  OnEdgesChange,
+  OnConnect,
+} from "@xyflow/react";
 
 import type { AppNode } from "./nodes/types";
+
+export type SelectedVersionState = {
+  id: number | null;
+  selectedAt: string | null;
+  nodes: AppNode[];
+  edges: Edge[];
+};
+
+export type SelectedVersionStoreType = SelectedVersionState & {
+  onNodesChange: OnNodesChange<AppNode>;
+  onEdgesChange: OnEdgesChange;
+  onConnect: OnConnect;
+  update: (state: SelectedVersionState) => void;
+  setNodes: (nodes: AppNode[]) => void;
+  setEdges: (edges: Edge[]) => void;
+};
 
 export type IVersion = {
   id: number;
