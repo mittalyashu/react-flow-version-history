@@ -30,7 +30,10 @@ export const useVersionsStore = create<VersionsStoreType>((set, get) => ({
         first: data,
         last: list.length > 0 ? list[list.length - 1] : undefined,
       });
+
+      return id;
     }
+    return null;
   },
 
   getAll: async () => {

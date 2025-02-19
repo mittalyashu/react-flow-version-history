@@ -41,7 +41,7 @@ export default function App() {
         fitView
       >
         <div className="relative z-10 inline-block">
-            <SaveButton />
+          <SaveButton />
         </div>
         <Background />
 

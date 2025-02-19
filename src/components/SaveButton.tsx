@@ -2,6 +2,7 @@ import { useReactFlow } from "@xyflow/react";
 
 import { useVersionsStore } from "../store/useVersionsStore.ts";
 import type { AppNode } from "../nodes/types";
+import { useSelectedVersionStore } from "../store/useSelectedVersionStore.ts";
 
 export function SaveButton() {
   const addVersion = useVersionsStore((state) => state.add);
@@ -11,7 +12,24 @@ export function SaveButton() {
     const nodes = reactFlow.getNodes() as AppNode[];
     const edges = reactFlow.getEdges();
 
-    await addVersion(nodes, edges);
+    const id = await addVersion(nodes, edges);
+    if (id) {
+      const selectedAt = new Date().toJSON();
+      useSelectedVersionStore.getState().update({
+        id,
+        selectedAt,
+        nodes,
+        edges,
+      });
+
+      localStorage.setItem(
+        "selectedVersion",
+        JSON.stringify({
+          versionId: id,
+          selectedAt,
+        }),
+      );
+    }
   }
 
   return (

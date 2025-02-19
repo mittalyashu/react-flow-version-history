@@ -12,8 +12,8 @@ export type VersionsStoreType = {
   count: number;
   first?: IVersion;
   last?: IVersion;
-  add: (nodes: AppNode[], edges: Edge[]) => void;
-  getAll: () => void;
+  add: (nodes: AppNode[], edges: Edge[]) => Promise<number | null>;
+  getAll: () => Promise<void>;
 };
 
 export type SelectedVersionState = {

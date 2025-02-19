@@ -7,8 +7,7 @@ export function VersionList() {
   const selectedVersionId = useSelectedVersionStore((state) => state.id);
 
   async function selectHandler(e) {
-    const versionId = e.target.value;
-
+    const versionId = Number.parseInt(e.target.value || "", 10);
     const data = await db.versions.get(versionId);
     if (data) {
       const selectedAt = new Date().toJSON();
@@ -22,8 +21,8 @@ export function VersionList() {
       localStorage.setItem(
         "selectedVersion",
         JSON.stringify({
-          versionId: e.target.value,
-          selectedAt
+          versionId,
+          selectedAt,
         }),
       );
     }
