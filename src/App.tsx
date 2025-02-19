@@ -3,7 +3,7 @@ import { useShallow } from "zustand/react/shallow";
 import "@xyflow/react/dist/style.css";
 
 import { VersionList } from "./components/VersionList";
-import { ResetButton } from "./components/ResetButton";
+import { SaveButton } from "./components/SaveButton.tsx";
 import { useSelectedVersionStore } from "./store/useSelectedVersionStore";
 import { useInitializeApp } from "./hooks/useInitializeApp";
 import { nodeTypes } from "./nodes";
@@ -28,7 +28,6 @@ export default function App() {
     <div className="h-screen w-screen">
       <div className="flex items-center gap-2">
         <VersionList />
-        <ResetButton />
       </div>
 
       <ReactFlow
@@ -41,6 +40,9 @@ export default function App() {
         onConnect={onConnect}
         fitView
       >
+        <div className="relative z-10 inline-block">
+            <SaveButton />
+        </div>
         <Background />
 
         <Controls />
