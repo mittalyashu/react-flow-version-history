@@ -16,7 +16,7 @@ export const getVersions = async () => {
   return await db.versions.toArray();
 };
 
-export const getVersionById = async (id: string) => {
+export const getVersionById = async (id: number) => {
   // @ts-expect-error - ???
   return await db.versions.get(id);
 };
