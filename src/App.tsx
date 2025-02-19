@@ -15,11 +15,12 @@ import { initialEdges, edgeTypes } from "./edges";
 import { getVersionById, saveVersion } from "./store/versionDb";
 import { VersionList } from "./components/VersionList";
 import { useSelectedVersion } from "./store/useSelectedVersion";
+import { ResetButton } from "./components/ResetButton";
 
 export default function App() {
   const isLoaded = useRef<boolean>(false);
 
-  const { nodes, onNodesChange } = useSelectedVersion()
+  const { nodes, onNodesChange } = useSelectedVersion();
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
@@ -42,7 +43,10 @@ export default function App() {
 
   return (
     <div className="h-screen w-screen">
-      <VersionList />
+      <div className="flex items-center gap-2">
+        <VersionList />
+        <ResetButton />
+      </div>
 
       <ReactFlow
         nodes={nodes}
