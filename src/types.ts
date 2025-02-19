@@ -4,4 +4,4 @@ export type IVersion = {
   nodes: unknown;
   edges: unknown;
   created_at: Date;
-}
+};
