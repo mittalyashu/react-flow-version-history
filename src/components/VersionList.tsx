@@ -1,41 +1,36 @@
-import {useEffect, useState} from "react";
-
 import db from "../database/versionDb";
-import type { IVersion, IVersionSelected } from "../types";
+import { useVersionsStore } from "../store/useVersionsStore";
+import { useSelectedVersionStore } from "../store/useSelectedVersionStore";
 
 export function VersionList() {
-  const [versions, setVersions] = useState<IVersion[]>([]);
-  const [selectedVersion, setSelectedVersion] =
-    useState<IVersionSelected | null>(null);
-
-  async function getVersionHandler() {
-    const data = await db.versions.orderBy("created_at").reverse().toArray();
-    setVersions(data);
-  }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const getSelectedVersion = localStorage.getItem("selectedVersion");
-    if (getSelectedVersion) {
-      setSelectedVersion(JSON.parse(getSelectedVersion));
-    }
-
-    // fetch versions from db
-    getVersionHandler();
-  }, []);
+  const versions = useVersionsStore((state) => state.versions);
+  const selectedVersionId = useSelectedVersionStore((state) => state.id);
 
   async function selectHandler(e) {
-    localStorage.setItem(
-      "selectedVersion",
-      JSON.stringify({
-        versionId: e.target.value,
-        selected_at: new Date().toJSON(),
-      }),
-    );
+    const versionId = e.target.value;
+
+    const data = await db.versions.get(versionId);
+    if (data) {
+      const selectedAt = new Date().toJSON();
+      useSelectedVersionStore.getState().update({
+        id: data.id,
+        selectedAt,
+        nodes: data.nodes,
+        edges: data.edges,
+      });
+
+      localStorage.setItem(
+        "selectedVersion",
+        JSON.stringify({
+          versionId: e.target.value,
+          selectedAt
+        }),
+      );
+    }
   }
 
   return (
-    <select onChange={selectHandler} value={selectedVersion?.versionId}>
+    <select onChange={selectHandler} value={selectedVersionId || ""}>
       <option>Select version to display</option>
 
       {versions.map((version) => (

@@ -7,6 +7,14 @@ import type {
 
 import type { AppNode } from "./nodes/types";
 
+export type VersionsStoreType = {
+  versions: IVersion[];
+  count: number;
+  first?: IVersion;
+  last?: IVersion;
+  getAll: () => void;
+};
+
 export type SelectedVersionState = {
   id: number | null;
   selectedAt: string | null;

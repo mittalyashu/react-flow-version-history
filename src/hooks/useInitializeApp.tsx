@@ -4,17 +4,23 @@ import db from "../database/versionDb";
 import { initialNodes } from "../nodes";
 import { initialEdges } from "../edges";
 import { useSelectedVersionStore } from "../store/useSelectedVersionStore";
+import { useVersionsStore } from "../store/useVersionsStore.ts";
 
 export function useInitializeApp() {
   const isLoaded = useRef<boolean>(false);
+
+  const latestVersion = useVersionsStore((state) => state.first);
+  const getAll = useVersionsStore((state) => state.getAll);
   const selectVersion = useSelectedVersionStore((state) => state.update);
 
   async function init() {
     if (isLoaded.current) return;
-    const versionsCount = await db.versions.count();
 
+    await getAll();
+
+    const count = useVersionsStore.getState().count;
     // Seed database
-    if (versionsCount === 0) {
+    if (count === 0) {
       await db.versions.add({
         id: 1,
         name: "INITIAL",
@@ -28,6 +34,9 @@ export function useInitializeApp() {
         "selectedVersion",
         JSON.stringify({ versionId: 1, selectedAt }),
       );
+
+      getAll();
+
       selectVersion({
         id: 1,
         selectedAt,
@@ -35,15 +44,17 @@ export function useInitializeApp() {
         edges: initialEdges,
       });
     } else {
-      let versionIdStr: string | undefined = undefined;
+      let versionIdStr: number | undefined = undefined;
       const getSelectedVersion = localStorage.getItem("selectedVersion");
       if (getSelectedVersion) {
         const selectedVersionObject = JSON.parse(getSelectedVersion);
-        versionIdStr = selectedVersionObject?.versionId;
-      } else {
-        const latestVersion = await db.versions.orderBy("created_at").last();
+        versionIdStr = Number.parseInt(selectedVersionObject?.versionId, 10);
+        console.log("versionIdStr:", versionIdStr);
+      }
+
+      if (Number.isNaN(versionIdStr)) {
         if (latestVersion) {
-          versionIdStr = latestVersion.id.toString();
+          versionIdStr = latestVersion?.id;
           const selectedAt = new Date().toJSON();
           localStorage.setItem(
             "selectedVersion",
@@ -54,7 +65,7 @@ export function useInitializeApp() {
 
       if (versionIdStr) {
         // get version by ID from db
-        const data = await db.versions.get(Number.parseInt(versionIdStr, 10));
+        const data = await db.versions.get(versionIdStr);
         if (data) {
           selectVersion({
             id: data.id,
