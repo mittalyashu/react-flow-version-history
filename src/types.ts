@@ -5,3 +5,8 @@ export type IVersion = {
   edges: unknown;
   created_at: string;
 };
+
+export type IVersionSelected = {
+  versionId: number;
+  selected_at: string;
+};
