@@ -6,9 +6,12 @@ db.version(1).stores({
 });
 
 export const saveVersion = async (name: string, nodes: unknown, edges: unknown) => {
+
   // @ts-expect-error - ???
   await db.versions.add({
-    name, nodes, edges, created_at: new Date().toJSON() });
+
+    name, nodes, edges, 
+    created_at: new Date().toJSON() });
 };
 
 export const getVersions = async () => {
