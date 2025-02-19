@@ -3,5 +3,5 @@ export type IVersion = {
   name: string;
   nodes: unknown;
   edges: unknown;
-  created_at: Date;
+  created_at: string;
 };

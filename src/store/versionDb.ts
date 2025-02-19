@@ -1,6 +1,10 @@
-import Dexie from "dexie";
+import Dexie, { type EntityTable } from "dexie";
 
-const db = new Dexie("FlowDB");
+import type { IVersion } from "../types";
+
+const db = new Dexie("FlowDB") as Dexie & {
+  versions: EntityTable<IVersion, "id">;
+};
 db.version(1).stores({
   versions: "++id, name, nodes, edges, created_at",
 });
@@ -10,7 +14,6 @@ export const saveVersion = async (
   nodes: unknown,
   edges: unknown,
 ) => {
-  // @ts-expect-error - ???
   await db.versions.add({
     name,
     nodes,
@@ -20,12 +23,10 @@ export const saveVersion = async (
 };
 
 export const getVersions = async () => {
-  // @ts-expect-error - ???
   return await db.versions.toArray();
 };
 
 export const getVersionById = async (id: number) => {
-  // @ts-expect-error - ???
   return await db.versions.get(id);
 };
 
