@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { getVersions } from "../store/versionDb";
+import db from "../store/versionDb";
 import type { IVersion, IVersionSelected } from "../types";
 
 export function VersionList() {
@@ -9,10 +9,11 @@ export function VersionList() {
     useState<IVersionSelected | null>(null);
 
   async function getVersionHandler() {
-    const data = await getVersions();
+    const data = await db.versions.orderBy("created_at").reverse().toArray();
     setVersions(data);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const getSelectedVersion = localStorage.getItem("selectedVersion");
     if (getSelectedVersion) {
