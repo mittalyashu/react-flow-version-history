@@ -4,22 +4,22 @@ import {
   Background,
   Controls,
   addEdge,
-  useNodesState,
   useEdgesState,
   type OnConnect,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 
-import { initialNodes, nodeTypes } from "./nodes";
+import { nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
 import { getVersionById, saveVersion } from "./store/versionDb";
 import { VersionList } from "./components/VersionList";
+import { useSelectedVersion } from "./store/useSelectedVersion";
 
 export default function App() {
   const isLoaded = useRef<boolean>(false);
 
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const { nodes, onNodesChange } = useSelectedVersion()
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
