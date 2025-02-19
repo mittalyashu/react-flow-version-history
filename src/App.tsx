@@ -12,7 +12,7 @@ import "@xyflow/react/dist/style.css";
 
 import { nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
-import { getVersionById, saveVersion } from "./store/versionDb";
+import { getVersionById, saveVersion } from "./database/versionDb";
 import { VersionList } from "./components/VersionList";
 import { useSelectedVersion } from "./store/useSelectedVersion";
 import { ResetButton } from "./components/ResetButton";

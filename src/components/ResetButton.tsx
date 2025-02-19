@@ -1,6 +1,6 @@
 import { initialEdges } from "../edges";
 import { initialNodes } from "../nodes";
-import db from "../store/versionDb";
+import db from "../database/versionDb";
 
 export function ResetButton() {
   async function clickHandler() {

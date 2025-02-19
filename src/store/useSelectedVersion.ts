@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNodesState, type Node } from "@xyflow/react";
 
-import db from "./versionDb";
+import db from "../database/versionDb";
 
 export function useSelectedVersion() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-import db from "../store/versionDb";
+import db from "../database/versionDb";
 import type { IVersion, IVersionSelected } from "../types";
 
 export function VersionList() {
