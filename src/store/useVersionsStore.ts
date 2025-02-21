@@ -23,7 +23,9 @@ export const useVersionsStore = create<VersionsStoreType>((set, get) => ({
       const data = await db.versions.get(id);
 
       const previousVersionsState = get().versions;
-      const list = data ? [data, ...previousVersionsState] : [...previousVersionsState];
+      const list = data
+        ? [data, ...previousVersionsState]
+        : [...previousVersionsState];
       set({
         versions: list,
         count: get().count + 1,
