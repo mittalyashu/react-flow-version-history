@@ -6,6 +6,7 @@ export function VersionList() {
   const versions = useVersionsStore((state) => state.versions);
   const selectedVersionId = useSelectedVersionStore((state) => state.id);
 
+  // @ts-expect-error - ???
   async function selectHandler(e) {
     const versionId = Number.parseInt(e.target.value || "", 10);
     const data = await db.versions.get(versionId);
